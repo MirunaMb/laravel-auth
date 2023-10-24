@@ -1,11 +1,5 @@
 @extends('layouts.app')
 
-@section('css')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-@endsection
-
 @section('content')
     <div class="container text-center my-5">
         <a href="{{ route('admin.projects.create') }}" class="btn btn-success">
@@ -26,6 +20,8 @@
                         <th scope="col">Created at</th>
                         <th scope="col">Updated at</th>
                         <th scope="col"></th>
+                       
+                       
                     </tr>
                 </thead>
                 <tbody>
@@ -35,15 +31,50 @@
                             <td>{{ $project->title }}</td>
                             <td class="w-75">{{ $project->slug }}</td>
                             <td class="w-75">{{ $project->created_at }}</td>
-                            <td class="w-75">{{ $project->updated_at }} <i class="fa-solid fa-eye"></i></td>
+                            <td class="w-75">{{ $project->updated_at }}</td>
                             <td class="w-75">
+                              <div class="d-flex flex-row border-bottom-0 gap-2 ">
                                 <a href="{{ route('admin.projects.show', $project->id) }}">
-                                    Show
+                                <i class="fa-solid fa-eye"></i>
                                 </a>
-                                {{-- <a class="btn btn-primary" href="{{ route('projects.edit', $project->id) }}"><i
-                                            class="fa-solid fa-gear fa-bounce"></i>
-                                    </a> --}}
-
+                            
+                                 <a class="btn btn-primary" href="{{ route('admin.projects.edit', $project->id) }}">
+                                    <i class="fa-solid fa-gear fa-bounce"></i>
+                                </a>
+                                {{-- ICON TRASH --}}
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                            data-bs-target="#delete-modal-{{ $project->id }}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                        {{-- MODAL PER IL TRASH --}}
+                                        <div class="modal fade text-black" id="delete-modal-{{ $project->id }}"
+                                            tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title fs-5" id="exampleModalLabel">Elimina elemento
+                                                        </h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Sei sicuro di voler eliminare definitivamente questo comic
+                                                        "{{ $project->titolo }}"?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Annulla</button>
+                                                        <form action="{{ route('admin.projects.destroy', $project) }}" method="POST"
+                                                            class="mx-1">
+                                                            @method('DELETE')
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-danger">Elimina</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                            </div>
                             </td>
                         </tr>
                     @endforeach
